@@ -5,8 +5,9 @@ Usage: unwrap.py VAULT_ROOT [--check]
 --check only reports files that contain hard-wrapped text (exit 1 if any).
 Without it, files are rewritten in place and the word count is verified unchanged.
 
-Rules: blank lines, headings, table rows, list markers and fence toggles reset the
-buffer; fenced blocks are copied verbatim; a list item keeps its own indentation.
+Rules: YAML frontmatter is copied verbatim; blank lines, headings, table rows, list
+markers and fence toggles reset the buffer; fenced code and display-math blocks are
+copied verbatim; a list item keeps its own indentation.
 """
 import re
 import sys
@@ -17,9 +18,18 @@ LIST = re.compile(r"^\s*([-*+]|\d+\.)\s")
 FENCE = re.compile(r"^\s*(```|~~~|\$\$\s*$)")  # code fences and display-math blocks
 
 
+def split_frontmatter(lines: list[str]) -> tuple[list[str], list[str]]:
+    if lines and lines[0] == "---":
+        end = next((i for i in range(1, len(lines)) if lines[i] in ("---", "...")), None)
+        if end is not None:
+            return lines[: end + 1], lines[end + 1 :]
+    return [], lines
+
+
 def unwrap(text: str) -> tuple[str, int]:
-    out, buf, joins, in_fence = [], [], 0, False
-    for line in text.split("\n"):
+    head, lines = split_frontmatter(text.split("\n"))
+    out, buf, joins, in_fence = list(head), [], 0, False
+    for line in lines:
         if FENCE.match(line):
             if buf:
                 out.append(" ".join(buf)); buf = []
@@ -47,7 +57,7 @@ def main(argv: list[str]) -> int:
     args = [a for a in argv if a != "--check"]
     root = Path(args[0] if args else ".")
     bad = 0
-    for p in root.rglob("*.md"):
+    for p in sorted(root.rglob("*.md")):
         if ".obsidian" in p.parts:
             continue
         src = p.read_text(encoding="utf-8")

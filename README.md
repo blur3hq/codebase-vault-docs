@@ -134,7 +134,7 @@ A multi-day documentation pass over a multi-module C++ numerical codebase, math 
 - [`SKILL.md`](codebase-vault-docs/SKILL.md): the entry point and per-module workflow.
 - [`tone-and-structure.md`](codebase-vault-docs/references/tone-and-structure.md): the writing, sourcing, Markdown and Canvas rules.
 - [`prose-cleanup.md`](codebase-vault-docs/references/prose-cleanup.md): the cleanup checklist applied to every note.
-- [`scripts/`](codebase-vault-docs/scripts): `check_wikilinks.py`, `unwrap.py`, `validate_canvas.py`. Python 3, no dependencies.
+- [`scripts/`](codebase-vault-docs/scripts): `check_wikilinks.py`, `unwrap.py`, `validate_canvas.py`. Python 3, no dependencies. [`tests/`](tests) exercises them against a good and a bad fixture vault.
 - [`examples/token-bucket.md`](examples/token-bucket.md): the level of explanation the rules ask for.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md): how to propose a rule change with evidence.
 - [`CHANGELOG.md`](CHANGELOG.md).

@@ -12,7 +12,7 @@ jobs:
       - name: Frontmatter parses and has name + description
         run: |
           python - <<'PY'
-          import yaml, sys
+          import yaml
           text = open("codebase-vault-docs/SKILL.md", encoding="utf-8").read()
           assert text.startswith("---\n"), "SKILL.md must start with YAML frontmatter"
           fm = yaml.safe_load(text.split("---\n", 2)[1])
@@ -20,9 +20,9 @@ jobs:
               assert isinstance(fm.get(key), str) and fm[key].strip(), f"missing {key}"
           print("frontmatter ok:", fm["name"])
           PY
-      - name: Scripts compile and run against the example
+      - name: Script tests (good and bad fixture vaults)
+        run: python -m unittest discover tests -v
+      - name: Example note passes the checks
         run: |
-          python -m py_compile codebase-vault-docs/scripts/*.py
           python codebase-vault-docs/scripts/check_wikilinks.py examples
           python codebase-vault-docs/scripts/unwrap.py examples --check
-          python codebase-vault-docs/scripts/validate_canvas.py examples
