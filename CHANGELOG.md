@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Rewrote the README in a plainer voice and positioned the skill as agent-agnostic: Agent Skills layout for Claude Code, Codex, Cursor and similar; paste-in instructions for any other LLM.
+
 - Reworked the README with a visual cover, a quick start, a vault layout, and a worked documentation example.
 - Corrected installation instructions to copy the inner skill directory, placing `SKILL.md` directly under `~/.claude/skills/codebase-vault-docs/`.
 - Added contribution guidance and focused issue and pull request templates.

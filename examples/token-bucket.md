@@ -54,4 +54,4 @@ If another request costing 3 tokens arrives immediately, no time has elapsed to 
 
 For a real implementation, cite the refill and admission code, describe its initial balance and numeric precision, and verify how it handles concurrent checks. If a changelog explains why the limiter uses a token bucket, quote that reason in a **Decision:** paragraph. Without that record, explain the observed behavior and leave the motivation unknown.
 
-[Back to the README](../README.md#the-difference-on-the-page)
+[Back to the README](../README.md#the-test)
