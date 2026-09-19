@@ -1,0 +1,22 @@
+name: Report a documentation problem
+description: Show where the skill, its output, or the setup instructions fall short.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What went wrong?
+      description: Include the prompt or installation step and what you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: A concrete example
+      description: Paste a small output excerpt and the source needed to check it. Remove private information.
+    validations:
+      required: true
+  - type: textarea
+    id: improvement
+    attributes:
+      label: What would make it clearer?
+      description: A suggested rule, explanation, or before/after excerpt, if you have one.

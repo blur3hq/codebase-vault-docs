@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- Reworked the README with a visual cover, a quick start, a vault layout, and a worked documentation example.
+- Corrected installation instructions to copy the inner skill directory, placing `SKILL.md` directly under `~/.claude/skills/codebase-vault-docs/`.
+- Added contribution guidance and focused issue and pull request templates.
+
 ## 2026-09-19
 
 - Initial release. Extracted and generalized from a real multi-day documentation pass over a 14-module C++ physics/simulation stack.

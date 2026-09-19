@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="440" viewBox="0 0 1280 440" fill="none" role="img" aria-labelledby="title desc">
+  <title id="title">Codebase Vault Docs</title>
+  <desc id="desc">Read the docs. Understand the code. A technical reference with explanations, diagrams, equations, and recorded decisions.</desc>
+  <rect width="1280" height="440" rx="20" fill="#F4F1E9"/>
+  <path d="M40 44H1240M40 396H1240" stroke="#D5D0C6"/>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12" letter-spacing="2" fill="#55554F">
+    <text x="48" y="29">CODEBASE / VAULT / DOCS</text>
+    <text x="1040" y="29">A CLAUDE CODE SKILL</text>
+    <text x="48" y="422">SOURCE → UNDERSTANDING</text>
+    <text x="1020" y="422">PLAIN FILES. REAL DEPTH.</text>
+  </g>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+    <rect x="48" y="82" width="180" height="28" rx="14" fill="#E3DCEF"/>
+    <text x="64" y="101" fill="#584272" font-size="12" font-weight="600" letter-spacing="1">EXPLAIN THE SYSTEM</text>
+    <text x="44" y="178" fill="#242822" font-size="57" font-weight="700" letter-spacing="-2">Read the docs.</text>
+    <text x="44" y="245" fill="#242822" font-size="57" font-weight="700" letter-spacing="-2">Understand the code.</text>
+    <text x="48" y="301" fill="#62655C" font-size="19">Mechanisms, equations, and the reasons on record.</text>
+    <text x="48" y="329" fill="#62655C" font-size="19">A linked reference you can work from.</text>
+  </g>
+  <rect x="694" y="73" width="538" height="296" rx="12" fill="#252A28"/>
+  <circle cx="714" cy="94" r="3" fill="#AFA0CE"/>
+  <circle cx="726" cy="94" r="3" fill="#7E8D83"/>
+  <circle cx="738" cy="94" r="3" fill="#626D65"/>
+  <text x="757" y="98" fill="#C6CEC5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="11">research-notes / rate-limiter</text>
+  <path d="M694 111H1232" stroke="#444C46"/>
+  <g font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="12">
+    <text x="716" y="144" fill="#D9E3D6">00-overview.md</text>
+    <text x="728" y="175" fill="#A6B1A5">01-admission.md</text>
+    <text x="728" y="202" fill="#A6B1A5">02-refill.md</text>
+    <text x="728" y="229" fill="#A6B1A5">03-decisions.md</text>
+    <text x="716" y="274" fill="#BDACDF">rate-limiter.canvas</text>
+  </g>
+  <path d="M705 169H719M705 196H719M705 223H719M705 154V223M924 131V292" stroke="#465049"/>
+  <g stroke="#B7A5D7" stroke-width="1.5">
+    <rect x="969" y="139" width="214" height="34" rx="6" fill="#3B3547"/>
+    <path d="M1076 173V193M1072 189L1076 193L1080 189"/>
+    <rect x="969" y="197" width="214" height="34" rx="6" fill="#3B3547"/>
+    <path d="M1076 231V244H1008V260M1076 244H1143V260M1004 256L1008 260L1012 256M1139 256L1143 260L1147 256"/>
+    <rect x="963" y="264" width="91" height="32" rx="6" fill="#30453D" stroke="#93B7A0"/>
+    <rect x="1097" y="264" width="91" height="32" rx="6" fill="#343B36" stroke="#7F9183"/>
+  </g>
+  <g font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#F0EAF9">
+    <text x="1076" y="161">Refill up to capacity</text>
+    <text x="1076" y="219">Enough tokens?</text>
+    <text x="1008" y="285">Admit</text>
+    <text x="1143" y="285">Reject</text>
+  </g>
+  <path d="M716 317H1210" stroke="#444C46"/>
+  <text x="716" y="344" fill="#A6B1A5" font-family="ui-monospace, SFMono-Regular, Consolas, monospace" font-size="11">EXPLANATIONS + DIAGRAMS + SOURCE CITATIONS</text>
+</svg>

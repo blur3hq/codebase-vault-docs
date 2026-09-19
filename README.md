@@ -1,87 +1,168 @@
-# codebase-vault-docs
+<p align="center">
+  <img src="assets/cover.svg" alt="Codebase Vault Docs. Read the docs. Understand the code. Source becomes explanations, diagrams, and a linked technical reference." width="100%">
+</p>
 
-A Claude Code skill that turns a codebase into a real technical reference: a folder-per-module Obsidian vault where every file explains a mechanism, not just indexes one.
+<h1 align="center">Codebase Vault Docs</h1>
 
-## The test this skill is built around
+<p align="center">A Claude Code skill for turning a codebase into a technical reference you can actually work from.</p>
 
-Copy a file's content into an email. Would the person on the other end understand how the thing works without ever opening the source?
+<p align="center">
+  <a href="https://code.claude.com/docs/en/skills"><img src="https://img.shields.io/badge/Claude_Code-skill-D97757?style=flat-square" alt="Claude Code skill"></a>
+  <a href="https://obsidian.md"><img src="https://img.shields.io/badge/Obsidian-vault-7C3AED?style=flat-square" alt="Obsidian vault"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-3B7663?style=flat-square" alt="MIT license"></a>
+</p>
 
-Most AI-generated documentation fails this test. It reads like this:
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#what-you-get">What you get</a> ·
+  <a href="examples/token-bucket.md">Read an example</a> ·
+  <a href="CONTRIBUTING.md">Contribute</a>
+</p>
 
-`````markdown
-## Public surface
+---
 
-| Symbol | Kind | Source |
-|---|---|---|
-| `RateLimiter` | class | `RateLimiter.h:12` |
-| `TokenBucket` | struct | `RateLimiter.h:34` |
+## The docs on the other half of your screen
 
-**Decision:** uses a token bucket rather than a fixed window.
-`````
+You are working on a codebase. The docs are open beside it. A question comes up: how does this mechanism work, where does that value come from, why was this approach chosen?
 
-That is an index. It tells you the rate limiter *has* a token bucket. It does not tell you what a token bucket is, how it refills, or why it was chosen over a fixed window. A reader who doesn't already know still has to open `RateLimiter.h`.
+The answer should be on the page.
 
-This skill produces the other thing:
+This skill tells Claude Code to read the source and build a folder-per-module Obsidian vault: explanations, equations, diagrams, recorded decisions, and links between the pieces. Every note has to stand on its own. Citations let you check the explanation; they do not do the explaining.
 
-`````markdown
-## How admission works
+> **The test:** copy a note into an email. Would the person on the other end understand the mechanism without opening the source?
 
-A bucket holds tokens, refills continuously over time up to a cap, and
-drains a fixed number of tokens per request. A request is only admitted if
-the bucket currently holds enough tokens to pay for it.
+## Quick start
 
-```mermaid
-flowchart TD
-    Elapsed["time since last check"] --> Refill["tokens = min(tokens + elapsed·rate, cap)"]
-    Refill --> Check{"tokens >= cost?"}
-    Check -- yes --> Allow["admit; tokens -= cost"]
-    Check -- no --> Block["reject"]
-```
+You need Git and [Claude Code](https://code.claude.com/docs/en/skills). Open the generated folder in [Obsidian](https://obsidian.md) to use the wikilinks, Mermaid diagrams, and Canvas maps together.
 
-Refill happens lazily, at check time, not on a background clock, so the
-limiter needs no timer thread of its own (`RateLimiter.cpp:41-52`).
+### 1. Install the skill
 
-**Decision:** a fixed window (N requests per second, hard reset) was
-rejected because it lets a full burst land in the last millisecond of one
-window and another full burst in the first millisecond of the next,
-briefly doubling the real rate. A token bucket smooths that out by
-construction (`CHANGELOG.md:8`, the incident this replaced).
-`````
-
-Same fact. The second version is documentation. The first is a lookup table wearing documentation's clothes.
-
-## What it produces
-
-- One folder per module, never a single file: `00-overview.md` as the entry point, plus separate files split along the module's actual seams (an equation-heavy subsystem, a request lifecycle, a build-time decision history).
-- A diagram in every file, however small the subject. If step 1 produces a value and step 2 consumes it, that handoff is a flowchart edge, not a sentence.
-- Every non-obvious equation explained term by term, not just quoted with a line number.
-- Every architecture decision labeled **Decision:** and backed by the real reason on record (a changelog entry, a code comment, a real incident), never an invented one.
-- Real discrepancies between what a module's docs claim and what its build does, written down instead of papered over.
-- An Obsidian Canvas mind map per documented subsystem, laid out so dependency edges stay short and legible instead of sweeping across the whole map.
-
-## Install
+Clone the repo, then copy its skill directory into Claude Code's personal skills folder:
 
 ```bash
-git clone https://github.com/blur3hq/codebase-vault-docs.git ~/.claude/skills/codebase-vault-docs
+git clone https://github.com/blur3hq/codebase-vault-docs.git
+mkdir -p ~/.claude/skills
+cp -R codebase-vault-docs/codebase-vault-docs ~/.claude/skills/
 ```
 
-Claude Code picks up any skill under `~/.claude/skills/`. Invoke it by asking to document a codebase, a module, or a specific mechanism, or let it trigger automatically on phrasing like "document this module," "explain how X works," or "map the architecture."
+The installed entry point should be `~/.claude/skills/codebase-vault-docs/SKILL.md`. The outer folder is the repository; the inner folder is the skill.
 
-## How it works
+<details>
+<summary>Install for one project instead</summary>
 
-1. Read `references/tone-and-structure.md` in full before writing anything. It is the rulebook, not a suggestion.
-2. Gather facts first: the module's own README/changelog, its public headers, enough of the implementation to ground every claim in a real source line. For a small module, read all of it; for a large one, prioritize the public surface over every internal file.
-3. Structure the module as a folder. Write the explanation, not the index, diagram every mechanism, explain every equation, cross-link to other modules instead of duplicating them.
-4. Run a prose cleanup pass (pairs well with [stop-slop](https://github.com/hardikpandya/stop-slop): no em dashes, no filler adverbs, no AI-tell phrasing).
-5. Update the module's mind map and the vault's index page.
-6. Verify: every link resolves, no paragraph was hard-wrapped, no banned phrasing survived outside a direct quote.
+From your target project's root, copy the skill from your local clone:
 
-The full rule set, including the markdown and Obsidian Canvas gotchas that silently break rendering if you don't know about them (hard-wrapped paragraphs rendering as broken lines, pipe-aliased links inside table cells, canvases that turn into unreadable tangles of crossing edges), lives in [`codebase-vault-docs/references/tone-and-structure.md`](codebase-vault-docs/references/tone-and-structure.md).
+```bash
+mkdir -p .claude/skills
+cp -R /path/to/codebase-vault-docs/codebase-vault-docs .claude/skills/
+```
 
-## Who this is for
+Replace `/path/to/codebase-vault-docs` with the path to this repository. Commit `.claude/skills/codebase-vault-docs/` if you want to share the skill with your team.
 
-Anyone who has to hand a codebase, a library, or a subsystem to someone else and would rather write the explanation once than answer the same question five times: engineers onboarding a teammate, analysts documenting a system they didn't build, researchers writing up a codebase they're about to extend. It was built and battle-tested documenting a real multi-tier C++ physics and simulation stack, math and all, then generalized once the pattern held.
+</details>
+
+### 2. Give it a concrete starting point
+
+Start Claude Code in the codebase you want documented:
+
+```text
+/codebase-vault-docs Document the rate-limiter module in research-notes/.
+Start with admission, refill, and the decisions recorded in its changelog.
+```
+
+Or ask naturally:
+
+```text
+Build an Obsidian reference vault for this codebase in research-notes/.
+Start with the primitives, then work up through the modules that use them.
+```
+
+Claude can select the skill automatically when the request matches its description. Use `/codebase-vault-docs` when you want to invoke it directly.
+
+### 3. Open the vault
+
+Open `research-notes/` as a vault in Obsidian. Start at its index, follow a module's `00-overview.md`, and use the subsystem's Canvas to see how the pieces connect.
+
+For a first run, pick one module you know well. Check its explanations against the source before expanding to the rest of the stack.
+
+## What you get
+
+An illustrative vault layout, with notes split along the module's actual seams:
+
+```text
+research-notes/
+├── index.md                         # Start here
+├── conventions/
+│   └── style-guide.md               # Shared writing rules
+└── rate-limiter/
+    ├── 00-overview.md               # The module and its moving parts
+    ├── 01-admission.md              # A request, from check to result
+    ├── 02-refill.md                 # The equation and every term in it
+    ├── 03-decisions.md              # Reasons that exist in the record
+    └── rate-limiter.canvas          # How the pieces connect
+```
+
+The filenames after `00-overview.md` follow the subject. A solver, parser, and request router should not all be forced into the same outline.
+
+| In the vault | What belongs there |
+| --- | --- |
+| **Mechanisms** | An explanation you can understand without opening the implementation. |
+| **Diagrams** | A diagram in every note, with data handoffs drawn as edges. |
+| **Equations** | Each term defined, its inputs traced, and the shape of the equation explained. |
+| **Decisions** | The actual reason on record, backed by a comment, changelog, or incident. |
+| **Discrepancies** | Docs/source mismatches stated explicitly, with correctness bugs made prominent. |
+| **Connections** | Links to related notes and a Canvas map per documented subsystem. |
+
+## The difference, on the page
+
+A symbol table can tell you that a rate limiter has a token bucket:
+
+```markdown
+| Symbol | Kind | Source |
+| --- | --- | --- |
+| RateLimiter | class | RateLimiter.h:12 |
+| TokenBucket | struct | RateLimiter.h:34 |
+```
+
+It cannot tell you how admission works. The explanation has to carry that:
+
+> A bucket holds tokens up to a fixed capacity. Elapsed time replenishes them; an admitted request spends them. At each check, the limiter first adds the tokens earned since the previous check, caps the balance at capacity, and compares it with the request's cost. Enough tokens means admit and subtract. Too few means reject and keep the refilled balance.
+
+```mermaid
+flowchart LR
+    Time["Elapsed time"] --> Refill["Refill up to capacity"]
+    Refill --> Check{"Enough tokens?"}
+    Check -- Yes --> Admit["Admit and subtract cost"]
+    Check -- No --> Reject["Reject"]
+```
+
+The table is a lookup aid. The prose and diagram explain the mechanism. [Read the full illustrative note](examples/token-bucket.md), including the refill equation and a worked example. This is a teaching example, not output from a bundled source repository; real vault notes also need verified source citations.
+
+## How the skill works
+
+1. **Read the rulebook.** Load [`tone-and-structure.md`](codebase-vault-docs/references/tone-and-structure.md) and any existing vault conventions before writing.
+2. **Gather facts.** Read the module's docs, public surface, and enough implementation to support the claims. Work bottom-up through interdependent modules.
+3. **Explain the mechanisms.** Split the module into focused notes. Draw the handoffs, explain the math, and record decisions only when the reason is available.
+4. **Clean up the prose.** Remove filler and AI-tell phrasing. The workflow pairs with [stop-slop](https://github.com/hardikpandya/stop-slop); its cleanup rules can also be applied directly.
+5. **Connect the vault.** Cross-link related notes, update the Canvas, and add the module to the index.
+6. **Verify the result.** Resolve links, check Canvas JSON and layout, and catch the Markdown quirks that break Obsidian rendering.
+
+The skill is a set of instructions and a reference guide. Claude Code does the reading and writing with the tools available in your session. Source access, context limits, and review still matter.
+
+## Built for the handoff
+
+Use it when you are onboarding a teammate, taking over an unfamiliar system, or documenting a research codebase before extending it. It started with a multi-day documentation pass over a 14-module C++ physics and simulation stack, math and all.
+
+The rules are language-independent; the original use case was C++. Notes are written in American English by default. Existing vault conventions can refine the style.
+
+## Inside this repo
+
+- [`SKILL.md`](codebase-vault-docs/SKILL.md): the entry point and per-module workflow.
+- [`tone-and-structure.md`](codebase-vault-docs/references/tone-and-structure.md): the full writing, sourcing, Markdown, and Canvas rules.
+- [`Example note`](examples/token-bucket.md): the level of explanation the rules ask for.
+- [`Contributing`](CONTRIBUTING.md): how to propose a rule change with evidence.
+- [`Changelog`](CHANGELOG.md): what changed.
 
 ## License
 
-MIT, see [LICENSE](LICENSE).
+[MIT](LICENSE) · Copyright © 2026 Ian Rodriguez.
