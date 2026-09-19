@@ -1,0 +1,28 @@
+name: validate
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - name: Frontmatter parses and has name + description
+        run: |
+          python - <<'PY'
+          import yaml, sys
+          text = open("codebase-vault-docs/SKILL.md", encoding="utf-8").read()
+          assert text.startswith("---\n"), "SKILL.md must start with YAML frontmatter"
+          fm = yaml.safe_load(text.split("---\n", 2)[1])
+          for key in ("name", "description"):
+              assert isinstance(fm.get(key), str) and fm[key].strip(), f"missing {key}"
+          print("frontmatter ok:", fm["name"])
+          PY
+      - name: Scripts compile and run against the example
+        run: |
+          python -m py_compile codebase-vault-docs/scripts/*.py
+          python codebase-vault-docs/scripts/check_wikilinks.py examples
+          python codebase-vault-docs/scripts/unwrap.py examples --check
+          python codebase-vault-docs/scripts/validate_canvas.py examples

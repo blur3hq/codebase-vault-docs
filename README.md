@@ -21,7 +21,7 @@
 
 ---
 
-The skill is two text files: `SKILL.md` with the workflow and `references/tone-and-structure.md` with the writing rules. They follow the [Agent Skills](https://agentskills.io) layout, so any agent that reads skill folders loads them as-is. Any other LLM works too: paste both files into the conversation and ask.
+The skill is a `SKILL.md` with the workflow, two reference files with the writing rules, and three small Python scripts that verify the output. They follow the [Agent Skills](https://agentskills.io) layout, so any agent that reads skill folders loads them as-is. Any other LLM works too: paste both files into the conversation and ask.
 
 ## The test
 
@@ -71,7 +71,7 @@ You should end up with `<your skills directory>/codebase-vault-docs/SKILL.md`. T
 | Codex | `~/.codex/skills/` | `.codex/skills/` |
 | Cursor | `~/.cursor/skills/` | `.cursor/skills/` |
 
-Other agents: check where yours looks for `SKILL.md` folders. If it has no skill support, paste `codebase-vault-docs/SKILL.md` and `codebase-vault-docs/references/tone-and-structure.md` at the start of the conversation. The project-level copy can be committed so the team shares it.
+Other agents: check where yours looks for `SKILL.md` folders. If it has no skill support, paste `codebase-vault-docs/SKILL.md` and the two files under `references/` at the start of the conversation. The scripts are optional; run them yourself afterwards. The project-level copy can be committed so the team shares it.
 
 ## Use it
 
@@ -119,20 +119,22 @@ What the rules require in every note:
 1. Load [`tone-and-structure.md`](codebase-vault-docs/references/tone-and-structure.md) and any existing vault conventions.
 2. Gather facts: the module's README and changelog, its public surface, and enough implementation to ground every claim in a source line. Bottom-up through interdependent modules.
 3. Write the module as a folder. Explain each mechanism, diagram the handoffs, explain the math, and record decisions only when the reason exists.
-4. Clean the prose: no filler, no AI-tell phrasing. The rules pair with [stop-slop](https://github.com/hardikpandya/stop-slop), or you apply its checklist by hand.
+4. Clean the prose with the checklist in [`prose-cleanup.md`](codebase-vault-docs/references/prose-cleanup.md): no filler, no comma splices, no AI-tell phrasing.
 5. Cross-link related notes, update the Canvas, add the module to the index.
-6. Verify: every wikilink resolves, the Canvas parses as JSON, no paragraph was hard-wrapped, no table cell holds a pipe-aliased link.
+6. Verify with the scripts in [`scripts/`](codebase-vault-docs/scripts): every wikilink resolves, no paragraph is hard-wrapped, every Canvas parses and its edges stay between adjacent rows. Then re-check the citations in the touched files.
 
 The skill is text. The agent does the reading and writing with whatever tools it has, so source access, context size and your own review still matter.
 
 ## Where it came from
 
-A multi-day documentation pass over a 14-module C++ physics and simulation stack, math included, then generalized once the pattern held. The rules don't depend on the language. Notes come out in American English by default; an existing `conventions/style-guide.md` in the vault can override that.
+A multi-day documentation pass over a multi-module C++ numerical codebase, math included, then generalized once the pattern held. The rules don't depend on the language. Notes come out in American English by default; an existing `conventions/style-guide.md` in the vault can override that.
 
 ## Inside this repo
 
 - [`SKILL.md`](codebase-vault-docs/SKILL.md): the entry point and per-module workflow.
 - [`tone-and-structure.md`](codebase-vault-docs/references/tone-and-structure.md): the writing, sourcing, Markdown and Canvas rules.
+- [`prose-cleanup.md`](codebase-vault-docs/references/prose-cleanup.md): the cleanup checklist applied to every note.
+- [`scripts/`](codebase-vault-docs/scripts): `check_wikilinks.py`, `unwrap.py`, `validate_canvas.py`. Python 3, no dependencies.
 - [`examples/token-bucket.md`](examples/token-bucket.md): the level of explanation the rules ask for.
 - [`CONTRIBUTING.md`](CONTRIBUTING.md): how to propose a rule change with evidence.
 - [`CHANGELOG.md`](CHANGELOG.md).
