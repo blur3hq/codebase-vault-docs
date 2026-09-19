@@ -22,7 +22,8 @@ A folder-per-module Obsidian vault where every file is a real explanation, verif
 
 1. Load `references/tone-and-structure.md` now, in full. It is the actual rulebook: structure, tone, diagrams, equations, citations, and the Markdown formatting gotchas. Do not proceed from memory of a previous session; load it fresh every time this skill is invoked.
 2. Identify the vault root (e.g. `research-notes/`) and check whether a `conventions/style-guide.md` already exists there. If it does, read it; it may carry project-specific refinements on top of this skill's defaults. If it doesn't, create one from the rule list in `references/tone-and-structure.md`, written in American English regardless of the conversation's language.
-3. If documenting a large stack of interdependent modules, work bottom-up: primitives first, then domain libraries, then whatever composes them. Each module's note can then cite the already-documented module below it instead of re-deriving it.
+3. Check for `progress.md` at the vault root. If it exists, read it and resume from its "Next" line instead of re-planning; a previous session may have left a module half-gathered. If it doesn't exist and the job spans more than one module, create it now (see "The progress file").
+4. If documenting a large stack of interdependent modules, work bottom-up: primitives first, then domain libraries, then whatever composes them. Each module's note can then cite the already-documented module below it instead of re-deriving it. Write that order into `progress.md` before starting the first module.
 
 ## Workflow per module
 
@@ -38,6 +39,29 @@ A folder-per-module Obsidian vault where every file is a real explanation, verif
    - `unwrap.py --check`: no paragraph or list item is hard-wrapped. Without `--check` it joins the wrapped lines in place and verifies the word count did not change.
    - `validate_canvas.py`: every `.canvas` parses as JSON, every edge points at an existing node, edges only join adjacent rows, and same-row nodes do not overlap.
    Then grep for banned words outside direct quotes, and re-open every `file:line` citation in the files you touched to confirm the line still says what the note claims.
+9. **Update `progress.md`.** Mark the module done with its `source_commit`, and set the "Next" line to the following module in the planned order. If the session has to stop mid-module, record what was already gathered and which files remain, so the next session does not start over.
+
+## The progress file
+
+`progress.md` at the vault root is the only state carried between sessions. It exists so that a vault of twenty modules can be built over a week without the agent re-deriving the plan, re-reading finished modules, or losing a half-written one. Keep it to this shape:
+
+```markdown
+# Progress
+
+Order: bottom-up. Primitives, then domain libraries, then composers.
+
+| Module | Status | Verified at | Remaining |
+| --- | --- | --- | --- |
+| libs/core | done | abc1234 | |
+| libs/parser | in progress | | facts gathered for 01-lexer and 02-grammar; 03-errors not started; canvas not updated |
+| app/router | planned | | |
+
+Next: finish libs/parser (03-errors), then app/router.
+
+Known gaps: libs/core README claims a dependency on libs/net that CMake does not link (see libs/core/00-overview).
+```
+
+Rules: `Status` is one of `planned`, `in progress`, `done`. `Verified at` is the short commit hash the module's notes were checked against and matches the module's `source_commit`. `Remaining` is empty for `done` and `planned`; for `in progress` it says what exists and what does not, in enough detail that a fresh session can continue without re-reading the source. No dates and no narrative; the worklog holds those if the vault has one. The "Known gaps" list collects the docs/source mismatches found across modules (see the next section) so they are visible in one place.
 
 ## Citations that survive refactors
 

@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Added `progress.md` at the vault root: module status, verified commit, and what a half-finished module still needs, so a large vault can be built across sessions without re-planning.
 - Script fixes: `unwrap.py` copies YAML frontmatter verbatim instead of joining its keys into one line; `check_wikilinks.py` ignores links inside inline code, resolves embeds by file name anywhere in the vault, and reports bare links whose basename matches several files; `validate_canvas.py` clusters rows by proximity instead of exact `y`, skips `group` nodes, and warns on gaps under 60px.
 - Added `tests/` with a good and a bad fixture vault and a unittest suite over the scripts' exit codes and messages. CI runs it.
 - Fixed the `SKILL.md` frontmatter: the description contained `: "`, which strict YAML parsers reject. It is now a folded block, and a GitHub workflow parses it on every push.

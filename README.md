@@ -93,6 +93,7 @@ Open the output folder as a vault in Obsidian. Wikilinks, Mermaid diagrams and C
 ```text
 research-notes/
 ├── index.md                         # Start here
+├── progress.md                      # Module status, for multi-session work
 ├── conventions/
 │   └── style-guide.md               # Shared writing rules
 └── rate-limiter/

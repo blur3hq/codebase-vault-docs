@@ -9,6 +9,8 @@ This is the actual rulebook. Check every file against it before considering the 
 
 Do not mix the two. A technical note is never "on 2026-09-19 we found that..."; it is "the retry queue drains oldest-first...".
 
+A third file, `progress.md` at the vault root, tracks which modules are done, in progress, or planned, and what a half-finished module still needs. SKILL.md defines its shape. It is state, not documentation: no dates, no narrative, no explanations.
+
 ## Tone
 
 1. **State facts, not justifications.** Describe what the code does, not why it is good that it does so. "The limiter refills the bucket at check time, from the monotonic time elapsed since the previous check" is a fact. "The limiter should never own a timer thread, because that keeps it simple" is a justification, admissible only when the sentence documents an actual architecture decision (rule 3).
